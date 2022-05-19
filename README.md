@@ -48,27 +48,78 @@ A tittre d'exemple, voici [une connexion WPA Entreprise](files/auth.pcap) qui co
 
 Pour réussir votre capture, vous pouvez procéder de la manière suivante :
 
-- 	Identifier l'AP le plus proche, en identifiant le canal utilisé par l’AP dont la puissance est la plus élevée (et dont le SSID est HEIG-VD...). Vous pouvez faire ceci avec ```airodump-ng```, par exemple
--   Lancer une capture avec Wireshark
--   Etablir une connexion depuis un poste de travail (PC), un smartphone ou n'importe quel autre client WiFi. __Attention__, il est important que la connexion se fasse à 2.4 GHz pour pouvoir sniffer avec les interfaces Alfa
+- Identifier l'AP le plus proche, en identifiant le canal utilisé par l’AP dont la puissance est la plus élevée (et dont le SSID est HEIG-VD...). Vous pouvez faire ceci avec ```airodump-ng```, par exemple
+
+- Lancer une capture avec Wireshark
+
+- Etablir une connexion depuis un poste de travail (PC), un smartphone ou n'importe quel autre client WiFi. __Attention__, il est important que la connexion se fasse à 2.4 GHz pour pouvoir sniffer avec les interfaces Alfa
+
 - Comparer votre capture au processus d’authentification donné en théorie (n’oubliez pas les captures d'écran pour illustrer vos comparaisons !). En particulier, identifier les étapes suivantes :
+	
+	Nous avons eu quelques soucis avec les captures, nous en avons donc fait plusieurs afin de récupérer un maximum de trames. Les captures d'écran proviennent donc de différentes captures Wireshark, dont celle fournie.
+	
 	- Requête et réponse d’authentification système ouvert
+	
+	  ![image-20220519153019383](images/image-20220519153019383.png)
+	
  	- Requête et réponse d’association (ou reassociation)
+	
+	![image-20220519154224793](images/image-20220519154224793.png)
+	
+	![image-20220519154251210](images/image-20220519154251210.png)
+	
 	- Négociation de la méthode d’authentification entreprise (TLS?, TTLS?, PEAP?, LEAP?, autre?)
+	
+	  ![image-20220519154836938](images/image-20220519154836938.png)
+	
 	- Phase d’initiation
+	
+	  ![image-20220519155004508](images/image-20220519155004508.png)
+	
 	- Phase hello :
+		
+		![image-20220519155041014](images/image-20220519155041014.png)
+		
 		- Version TLS
+		
+		  ![image-20220519155517269](images/image-20220519155517269.png)
+		
 		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
+		
+		  ![image-20220519155605935](images/image-20220519155605935.png)
+		
 		- Nonces
+		
+		  ![image-20220519155652682](images/image-20220519155652682.png)
+		
 		- Session ID
+		
+		  ![image-20220519155931889](images/image-20220519155931889.png)
+		
 	- Phase de transmission de certificats
+	
+	  ![image-20220519160859014](images/image-20220519160859014.png)
+	
+	  ![image-20220519160925337](images/image-20220519160925337.png)
+	
 	 	- Echanges des certificats
+		
+		![image-20220519161011190](images/image-20220519161011190.png)
+		
 		- Change cipher spec
+		
+		  ![image-20220519161126191](images/image-20220519161126191.png)
+		
 	- Authentification interne et transmission de la clé WPA (échange chiffré, vu par Wireshark comme « Application data »)
+	
+	  ![image-20220519161301026](images/image-20220519161301026.png)
+	
 	- 4-way handshake
+	
+	  ![image-20220519161326769](images/image-20220519161326769.png)
 
 ### Répondez aux questions suivantes :
- 
+
 > **_Question :_** Quelle ou quelles méthode(s) d’authentification est/sont proposé(s) au client ?
 > 
 > **_Réponse :_** 
