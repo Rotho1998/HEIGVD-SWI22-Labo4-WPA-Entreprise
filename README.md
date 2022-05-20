@@ -61,6 +61,8 @@ Pour réussir votre capture, vous pouvez procéder de la manière suivante :
 	- Requête et réponse d’authentification système ouvert
 	
 	  ![image-20220519153019383](images/image-20220519153019383.png)
+	  
+	  Le client (IntelCor_da:a2:87) envoie une requête d'authentification à l'AP (Cisco_60:c2:b0) qui lui retourne une réponse d'authentification.
 	
  	- Requête et réponse d’association (ou reassociation)
 	
@@ -68,48 +70,90 @@ Pour réussir votre capture, vous pouvez procéder de la manière suivante :
 	
 	![image-20220519154251210](images/image-20220519154251210.png)
 	
+	Ces captures ont été récupérées de deux captures Wireshark différentes. Mais on voit bien le requête et la réponse de l'association, toujours entre le même client et le même AP.
+	
 	- Négociation de la méthode d’authentification entreprise (TLS?, TTLS?, PEAP?, LEAP?, autre?)
 	
 	  ![image-20220519154836938](images/image-20220519154836938.png)
+	
+	  Nous n'avons pas réussi à récupérer l'échange complet, nous avons donc utilisé la capture fournie. Cet échange s'est fait en 3 requêtes, la première est l'AP qui indique vouloir utiliser la méthode `TLS`. La deuxième est le client qui répond négativement à l'AP, et demande une autre méthode (`PEAP`). La dernière est l'AP qui réitère sa requête en utilisant la méthode `PEAP`.
 	
 	- Phase d’initiation
 	
 	  ![image-20220519155004508](images/image-20220519155004508.png)
 	
+	  Ici, il s'agit d'un simple requête et réponse entre l'AP et le client.
+	
 	- Phase hello :
 		
+		Pour cette phase, nous avons pris en fonction de ce que nous avons récupérer de nos propres captures, et compléter avec la capture fournie.
+		
 		![image-20220519155041014](images/image-20220519155041014.png)
+		
+		![image-20220520133510299](images/image-20220520133510299.png)
+		
+		On voit ici la requête du client et du serveur.
 		
 		- Version TLS
 		
 		  ![image-20220519155517269](images/image-20220519155517269.png)
 		
+		  ![image-20220520133612256](images/image-20220520133612256.png)
+		
+		  La version TLS utilisée est la `1.2`. Comme confirmée par le serveur.
+		
 		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
+		
+		  Suites proposées par le client :
 		
 		  ![image-20220519155605935](images/image-20220519155605935.png)
 		
+		  Méthode de compression proposée par le client :
+		
+		  ![image-20220520134425111](images/image-20220520134425111.png)
+		
+		  Suite et méthode de compression acceptée par le serveur :
+		
+		  ![image-20220520134238158](images/image-20220520134238158.png)
+		
 		- Nonces
+		
+		  Random du client :
 		
 		  ![image-20220519155652682](images/image-20220519155652682.png)
 		
+		  Random du serveur :
+		
+		  ![image-20220520134627243](images/image-20220520134627243.png)
+		
 		- Session ID
 		
+		  Client :
+		  
 		  ![image-20220519155931889](images/image-20220519155931889.png)
+		  
+		  Serveur :
+		  
+		  ![image-20220520134731468](images/image-20220520134731468.png)
 		
 	- Phase de transmission de certificats
 	
+	    - Echanges des certificats
+	
 	  ![image-20220519160859014](images/image-20220519160859014.png)
 	
-	  ![image-20220519160925337](images/image-20220519160925337.png)
+	  Avec la méthode `PEAP`, seulement le serveur envoie ses certificats.
 	
-	 	- Echanges des certificats
-		
-		![image-20220519161011190](images/image-20220519161011190.png)
-		
-		- Change cipher spec
-		
-		  ![image-20220519161126191](images/image-20220519161126191.png)
-		
+	  Certificats transmis :
+	
+	  ![image-20220520135314525](images/image-20220520135314525.png)
+	
+	  - Change cipher spec
+	
+	    ![image-20220519161126191](images/image-20220519161126191.png)
+	    
+	    Ce message indique que les transmissions entre le client et le serveur seront chiffrées dès cette trame.
+	
 	- Authentification interne et transmission de la clé WPA (échange chiffré, vu par Wireshark comme « Application data »)
 	
 	  ![image-20220519161301026](images/image-20220519161301026.png)
@@ -122,32 +166,33 @@ Pour réussir votre capture, vous pouvez procéder de la manière suivante :
 
 > **_Question :_** Quelle ou quelles méthode(s) d’authentification est/sont proposé(s) au client ?
 > 
-> **_Réponse :_** 
+> **_Réponse :_** Le serveur propose en premier temps la méthode `TLS`, le client répond négativement et demande la méthode `PEAP`. Le serveur repropose donc cette méthode au client.
 
 ---
 
 > **_Question:_** Quelle méthode d’authentification est finalement utilisée ?
 > 
-> **_Réponse:_** 
+> **_Réponse:_** La méthode `PEAP`.
 
 ---
 
-> **_Question:_**Arrivez-vous à voir l’identité du client dans la phase d'initiation ? Oui ? Non ? Pourquoi ?
-> 
-> **_Réponse:_** 
+> **_Question:_** Arrivez-vous à voir l’identité du client dans la phase d'initiation ? Oui ? Non ? Pourquoi ?
+>
+> **_Réponse:_** Oui, on arrive, car le contenu est en clair :
+>
+> ![image-20220520140007858](images/image-20220520140007858.png)
 
 ---
 
 > **_Question:_** Lors de l’échange de certificats entre le serveur d’authentification et le client :
-> 
+>
 > - a. Le serveur envoie-t-il un certificat au client ? Pourquoi oui ou non ?
-> 
-> **_Réponse:_**
-> 
+>
+> **_Réponse:_** Oui, avec la méthode `PEAP`, le serveur envoie ses certificats, dans notre cas 3, pour s'authentifier auprès du client. Afin de vérifier la légitimité du serveur, le client va utiliser une autorité de certification.
+>
 > - b. Le client envoie-t-il un certificat au serveur ? Pourquoi oui ou non ?
-> 
-> **_Réponse:_**
-> 
+>
+> **_Réponse:_** Non, avec la méthode `PEAP`, seulement le serveur envoie ses certificats. Le serveur va authentifier le client lors de la phase d'authentification.
 
 ---
 
