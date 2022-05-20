@@ -217,8 +217,10 @@ Pour implémenter l’attaque :
 ### Répondez aux questions suivantes :
 
 > **_Question :_** Quelles modifications sont nécessaires dans la configuration de hostapd-wpe pour cette attaque ?
-> 
-> **_Réponse :_** 
+>
+> **_Réponse :_** Il faut aller modifier le nom du SSID (ici mis simplement en minuscules), ainsi que le canal (ici 11, celui utilisé par notre client)
+>
+> ![image-20220520161036838](images/image-20220520161036838.png)
 
 ---
 
@@ -229,8 +231,15 @@ Pour implémenter l’attaque :
 ---
 
 > **_Question:_** Quelles méthodes d’authentification sont supportées par hostapd-wpe ?
-> 
-> **_Réponse:_**
+>
+> **_Réponse:_** Source : https://www.kali.org/tools/hostapd-wpe/
+>
+> - EAP-FAST/MSCHAPv2
+> - PEAP/MSCHAPv2
+> - EAP-TTLS/MSCHAPv2
+> - EAP-TTLS/MSCHAP
+> - EAP-TTLS/CHAP
+> - EAP-TTLS/PAP
 
 
 ### 3. GTC Downgrade Attack avec [EAPHammer](https://github.com/s0lst1c3/eaphammer) 
