@@ -225,8 +225,16 @@ Pour implémenter l’attaque :
 ---
 
 > **_Question:_** Quel type de hash doit-on indiquer à john ou l'outil que vous avez employé pour craquer le handshake ?
-> 
-> **_Réponse:_** 
+>
+> **_Réponse:_** Nous avons utilisé john. Pour ce faire, il faut récupérer la valeur du hash (ligne jtr NETNTLM de la capture ci-dessous).
+>
+> ![image-20220523110934067](images/image-20220523110934067.png)
+>
+> Une fois récupéré, on le met dans un fichier txt et on exécute la commande `john john.txt`:
+>
+> ![image-20220523111207957](images/image-20220523111207957.png)
+>
+> AInsi, on peut récupérer le mot de passe indiqué lors de la tentative de connexion (`admin123`) avec comme nom d'utilisateur `admin`.
 
 ---
 
@@ -255,14 +263,36 @@ Pour implémenter l’attaque :
 ### Répondez aux questions suivantes :
 
 > **_Question :_** Expliquez en quelques mots l'attaque GTC Downgrade
-> 
-> **_Réponse :_** 
+>
+> **_Réponse :_** Après l'installation, on doit créer un certificat en exécutant la commande `sudo python3 eaphammer --cert-wizard`.
+>
+> ![image-20220523132239287](images/image-20220523132239287.png)
+>
+> On peut ensuite lancer l'attaque en lançant l'application avec les paramètres souhaités :
+>
+> ![image-20220523133900558](images/image-20220523133900558.png)
+>
+> Puis on attend que quelqu'un se connecte pour récupérer les identifiants, tout comme pour l'attaque précédente :
+>
+> ![image-20220523133939852](images/image-20220523133939852.png)
+>
+> On récupère efficacement, et cette foi-ci en clair, le nom d'utilisateur (`admin`) et le mot de passe (`admin123`).
+>
+> Avec cette attaque, la méthode EAP-GTC est utilisée (forcée) lors de la négociation, c'est cette méthode qui fait que la réponse du client est envoyée en clair.
 
 ---
 
 > **_Question:_** Quelles sont vos conclusions et réflexions par rapport à la méthode hostapd-wpe ?
-> 
-> **_Réponse:_** 
+>
+> **_Réponse:_** L'attaque nécessite une configuration de certificat, elle est donc un peu plus compliquée à préparer que pour l'attaque avec hostapd-wpe. Par contre, on va pouvoir récupérer les identifiants en clair, il n'y aura donc pas besoin de récupérer le hash.
+>
+> C'est également très efficace avec un mot de passe plus complexe :
+>
+> ![image-20220523134459827](images/image-20220523134459827.png)
+>
+> Avec un mot de passe comme celui-ci, john aurait beaucoup plus de mal pour le trouver si nous utilisons la méthode hostapd-wpe.
+>
+> Cette méthode est donc plus efficace une fois la configuration effectuée, qui permet notamment de générer un réseau qui paraît plus légitime avec le certificat.
 
 
 ### 4. En option, vous pouvez explorer d'autres outils comme [eapeak](https://github.com/rsmusllp/eapeak) ou [crEAP](https://github.com/W9HAX/crEAP/blob/master/crEAP.py) pour les garder dans votre arsenal de pentester.
